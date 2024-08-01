@@ -15,12 +15,6 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Post()
-  register(@Body() data) {
-    Logger.debug('register User');
-    return this.userService.register(data);
-  }
-
   @Get()
   findAll() {
     Logger.debug('find All Users');
@@ -31,6 +25,12 @@ export class UserController {
   profile(@Param('id_user', ParseIntPipe) id_user: number) {
     Logger.debug(`profile User by ${id_user}`);
     return this.userService.profile(id_user);
+  }
+
+  @Post()
+  register(@Body() data) {
+    Logger.debug('register User');
+    return this.userService.register(data);
   }
 
   @Put(':id_user')

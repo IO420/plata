@@ -48,7 +48,7 @@ export class UserService {
 
     Object.assign(user, data);
 
-    const savedUser = await this.userRepository.save(user);
+    this.userRepository.save(user);
 
     return {message:'user modify successfully'}
   }
