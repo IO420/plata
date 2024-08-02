@@ -1,14 +1,17 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Product } from "src/product/entity/product.entity";
+import { Storage } from "src/storage/entity/storage.entity";
+import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({name:'storage_details'})
-export class StorageDetails{
-
+@Entity({ name: 'storage_details' })
+export class StorageDetails {
     @PrimaryGeneratedColumn()
-    id_storage_details:number
+    id_storage_details: number;
 
-    @Column()
-    id_storage:number
+    @ManyToOne(() => Storage, storage => storage.storageDetails)
+    @JoinColumn({ name: 'id_storage', referencedColumnName:'id_storage',foreignKeyConstraintName:'Fk_storage' })
+    storage: Storage;
 
-    @Column()
-    id_product:number
+    @ManyToOne(() => Product, product => product.storageDetails)
+    @JoinColumn({ name: 'id_product', referencedColumnName:'id_product',foreignKeyConstraintName:'Fk_product' })
+    product: Product;
 }

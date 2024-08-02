@@ -15,6 +15,11 @@ import { KindModule } from './kind/kind.module';
 import { KindProductService } from './kind-product/kind-product.service';
 import { KindProductController } from './kind-product/kind-product.controller';
 import { KindProductModule } from './kind-product/kind-product.module';
+import { Type } from './type/entity/type.entity';
+import { StorageDetails } from './storage-details/entity/storage-details.entity';
+import { Kind } from './kind/entity/kind.entity';
+import { KindProduct } from './kind-product/entity/kind-product.entity';
+import { Storage } from './storage/entity/storage.entity';
 
 @Module({
   imports: [
@@ -25,10 +30,24 @@ import { KindProductModule } from './kind-product/kind-product.module';
       username: 'postgres',
       password: '1234',
       database: 'plata',
-      entities: [User, Product],
+      entities: [
+        User,
+        Type,
+        Product,
+        Storage,
+        StorageDetails,
+        Kind,
+        KindProduct,
+      ],
       synchronize: true,
     }),
-    ProductModule,UserModule, TypeModule, StorageDetailsModule, StorageModule, KindModule, KindProductModule
+    ProductModule,
+    UserModule,
+    TypeModule,
+    StorageDetailsModule,
+    StorageModule,
+    KindModule,
+    KindProductModule,
   ],
   controllers: [AppController, StorageController, KindProductController],
   providers: [AppService, StorageService, KindProductService],

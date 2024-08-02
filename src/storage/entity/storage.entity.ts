@@ -1,12 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { StorageDetails } from "src/storage-details/entity/storage-details.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({name:'storage'})
-export class Storage{
-
+@Entity({ name: 'storage' })
+export class Storage {
     @PrimaryGeneratedColumn()
-    id_storage:number
+    id_storage: number;
 
     @Column()
-    date:string
+    date: string;
 
+    @OneToMany(() => StorageDetails, storageDetails => storageDetails.storage)
+    storageDetails: StorageDetails[];
 }

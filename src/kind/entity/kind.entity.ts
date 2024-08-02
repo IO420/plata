@@ -1,12 +1,15 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { KindProduct } from "src/kind-product/entity/kind-product.entity";
+import { Product } from "src/product/entity/product.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({name:'kind'})
-export class Kind{
-
+@Entity({ name: 'kind' })
+export class Kind {
     @PrimaryGeneratedColumn()
-    id_kind:number
+    id_kind: number;
 
     @Column()
-    name:string
+    name: string;
 
+    @OneToMany(() => KindProduct, kindProduct => kindProduct.kind)
+    kindProducts: KindProduct[];
 }

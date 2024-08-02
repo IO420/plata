@@ -1,15 +1,17 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Kind } from "src/kind/entity/kind.entity";
+import { Product } from "src/product/entity/product.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({name:'kind_product'})
-export class KindProduct{
-
+@Entity({ name: 'kind_product' })
+export class KindProduct {
     @PrimaryGeneratedColumn()
-    id_kind_product:number
+    id_kind_product: number;
 
-    @Column()
-    id_kind:number
+    @ManyToOne(() => Kind, kind => kind.kindProducts)
+    @JoinColumn({ name: 'id_kind', referencedColumnName:'id_kind',foreignKeyConstraintName:'FK_kind' })
+    kind: Kind;
 
-    @Column()
-    id_product:number
-
+    @ManyToOne(() => Product, product => product.kindProduct)
+    @JoinColumn({ name: 'id_product', referencedColumnName:'id_product',foreignKeyConstraintName:'FK_product' })
+    product: Product;
 }
