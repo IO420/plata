@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Kind } from './entity/kind.entity';
 import { Repository } from 'typeorm';
@@ -10,6 +10,16 @@ export class KindService {
     @InjectRepository(Kind)
     private kindRepository: Repository<Kind>,
   ) {}
+
+  findAll(){
+    const data = this.kindRepository.find({order:{name:'ASC'}})
+    
+    if (!data) {
+      Logger.debug(`product not fount`);
+      throw new HttpException('product not fount', 404);
+    }
+    return data;
+  }
 
   register(data:KindDto){
     this.kindRepository.save(this.kindRepository.create(data))

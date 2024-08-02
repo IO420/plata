@@ -11,6 +11,10 @@ export class TypeService {
     private typeRepository: Repository<Type>,
   ) {}
 
+  findAll() {
+    return this.typeRepository.find({ order: { name: 'ASC' } });
+  }
+
   register(data: typeDto) {
     this.typeRepository.save(this.typeRepository.create(data));
 
@@ -20,12 +24,12 @@ export class TypeService {
   async remove(id_type: number) {
     const type = await this.typeRepository.findOne({ where: { id_type } });
 
-    if(!type){
-        Logger.debug('type not fount')
-        throw new HttpException('type not fount',404)
+    if (!type) {
+      Logger.debug('type not fount');
+      throw new HttpException('type not fount', 404);
     }
 
-    this.typeRepository.remove(type)
+    this.typeRepository.remove(type);
 
     return { message: 'type delete' };
   }

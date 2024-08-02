@@ -13,7 +13,7 @@ export class ProductController {
   }
 
   @Get(':id_product')
-  find(@Param('id_product',ParseIntPipe) id_product:number,@Body() data:ProductDto) {
+  find(@Param('id_product',ParseIntPipe) id_product:number) {
     Logger.debug(`find one product ${id_product}`);
     return this.productService.find(id_product);
   }
