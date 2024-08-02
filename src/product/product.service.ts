@@ -1,16 +1,19 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Product } from './entity/product.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ProductService {
-  constructor(private productRepository: Repository<Product>) {}
+  constructor(
+    @InjectRepository(Product)
+    private productRepository: Repository<Product>,
+  ) {}
 
-  find(id_product){
-    const product = this.productRepository.find({
-      where: { id_product }
+  async find(id_product) {
+    const product = await this.productRepository.findOne({
+      where: { id_product:id_product },
     });
-
     return product;
   }
 
@@ -18,6 +21,7 @@ export class ProductService {
     const data = this.productRepository.find({ order: { name: 'ASC' } });
 
     if (!data) {
+      Logger.debug(`product not fount`);
       throw new HttpException('product not fount', 404);
     }
 
@@ -40,46 +44,53 @@ export class ProductService {
     const products = await query.getMany();
 
     if (!products) {
+      Logger.debug(`product not fount`);
       throw new HttpException('product not fount', 404);
     }
 
+    Logger.debug(`find product successfully`);
     return products;
   }
 
   async register(data) {
+    Logger.debug(data);
     const product = await this.find(data.id_product);
 
-    if(product){
-      throw new HttpException('product already exist',404)
+    if (product) {
+      Logger.debug(`don't register:${data.name} already exist`);
+      throw new HttpException('product already exist', 404);
     }
 
-    this.productRepository.save(data);
+    this.productRepository.save(this.productRepository.create(data));
+    Logger.debug(`product register successfully`);
     return { message: 'product register successfully' };
   }
 
-  async modify(id_product,data){
+  async modify(id_product, data) {
     const product = await this.find(id_product);
 
-    if(!product){
-      throw new HttpException('product not fount',404)
+    if (!product) {
+      Logger.debug(`product not fount`);
+      throw new HttpException('product not fount', 404);
     }
 
     Object.assign(product, data);
 
     this.productRepository.save(product);
-
-
-    return {message:'product modify successfully'}
+    Logger.debug(`product modify successfully`);
+    return { message: 'product modify successfully' };
   }
 
   async remove(id_product) {
     const product = await this.find(id_product);
 
-    if(!product){
-      throw new HttpException('product not fount',404)
+    if (!product) {
+      Logger.debug(`product not fount`);
+      throw new HttpException('product not fount', 404);
     }
 
     this.productRepository.remove(product);
+    Logger.debug(`product delete successfully`);
     return { message: 'product delete successfully' };
   }
 }

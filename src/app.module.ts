@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entity/user.entity';
 import { ProductModule } from './product/product.module';
+import { Product } from './product/entity/product.entity';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { ProductModule } from './product/product.module';
       username: 'postgres',
       password: '1234',
       database: 'plata',
-      entities: [User],
+      entities: [User, Product],
       synchronize: true,
     }),
     ProductModule,
