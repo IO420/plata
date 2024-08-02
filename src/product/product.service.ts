@@ -14,6 +14,12 @@ export class ProductService {
     const product = await this.productRepository.findOne({
       where: { id_product:id_product },
     });
+
+    if(!product){
+      Logger.debug(`product not fount`);
+      throw new HttpException('product not fount', 404);
+    }
+
     return product;
   }
 
@@ -54,12 +60,6 @@ export class ProductService {
 
   async register(data) {
     Logger.debug(data);
-    const product = await this.find(data.id_product);
-
-    if (product) {
-      Logger.debug(`don't register:${data.name} already exist`);
-      throw new HttpException('product already exist', 404);
-    }
 
     this.productRepository.save(this.productRepository.create(data));
     Logger.debug(`product register successfully`);

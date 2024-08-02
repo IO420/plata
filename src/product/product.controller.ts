@@ -12,6 +12,12 @@ export class ProductController {
     return this.productService.findAll();
   }
 
+  @Get(':id_product')
+  find(@Param('id_product',ParseIntPipe) id_product:number,@Body() data:ProductDto) {
+    Logger.debug(`find one product ${id_product}`);
+    return this.productService.find(id_product);
+  }
+
   @Post()
   register(@Body() data:ProductDto){
     Logger.debug(`product register:${data.name}`);
