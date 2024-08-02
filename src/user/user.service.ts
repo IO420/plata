@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
@@ -11,7 +11,7 @@ export class UserService {
   ) {}
 
   register(data) {
-    this.userRepository.save(data);
+    this.userRepository.save(this.userRepository.create(data));
     return { message: 'user register successfully' };
   }
 
@@ -19,9 +19,11 @@ export class UserService {
     const user = this.userRepository.findOne({ where: { id_user } });
 
     if (!user) {
+      Logger.debug("User not fount")
       throw new HttpException('User not fount', 404);
     }
 
+    Logger.debug("find user successfully")
     return user;
   }
 
@@ -33,9 +35,11 @@ export class UserService {
     });
 
     if (!user) {
+      Logger.debug("User not fount")
       throw new HttpException('User not fount', 404);
     }
 
+    Logger.debug("find all users successfully")
     return user;
   }
 
@@ -43,13 +47,14 @@ export class UserService {
     const user = await this.userRepository.findOne({ where: { id_user } });
 
     if (!user) {
+      Logger.debug("User not fount")
       throw new HttpException('User not fount', 404);
     }
 
     Object.assign(user, data);
 
     this.userRepository.save(user);
-
+    Logger.debug("user modify successfully")
     return {message:'user modify successfully'}
   }
 
@@ -57,10 +62,12 @@ export class UserService {
     const user = await this.userRepository.find({ where: { id_user } });
 
     if (!user) {
+      Logger.debug("User not fount")
       throw new HttpException('User not fount', 404);
     }
 
     this.userRepository.remove(user);
+    Logger.debug("user delete successfully")
     return { message: 'user delete successfully' };
   }
 }

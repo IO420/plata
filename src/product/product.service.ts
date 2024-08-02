@@ -12,7 +12,7 @@ export class ProductService {
 
   async find(id_product) {
     const product = await this.productRepository.findOne({
-      where: { id_product:id_product },
+      where: { id_product },
     });
 
     if(!product){

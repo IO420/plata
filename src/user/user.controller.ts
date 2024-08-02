@@ -10,6 +10,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
+import { UserDto } from './dto/userDto.dto';
 
 @Controller('user')
 export class UserController {
@@ -28,20 +29,20 @@ export class UserController {
   }
 
   @Post()
-  register(@Body() data) {
-    Logger.debug('register User');
+  register(@Body() data:UserDto) {
+    Logger.debug(`register User `);
     return this.userService.register(data);
   }
 
   @Put(':id_user')
-  modify(@Param('id_user', ParseIntPipe) id_user: number,@Body() data) {
-    Logger.debug('modify User');
+  modify(@Param('id_user', ParseIntPipe) id_user: number,@Body() data:UserDto) {
+    Logger.debug(`modify User ${id_user}`);
     return this.userService.modify(id_user,data);
   }
 
   @Delete(':id_user')
   remove(@Param('id_user', ParseIntPipe) id_user: number) {
-    Logger.debug('delete User');
+    Logger.debug(`delete User ${id_user}`);
     return this.userService.remove(id_user);
   }
 }
