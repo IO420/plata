@@ -6,6 +6,15 @@ import { User } from './user/entity/user.entity';
 import { ProductModule } from './product/product.module';
 import { Product } from './product/entity/product.entity';
 import { UserModule } from './user/user.module';
+import { TypeModule } from './type/type.module';
+import { StorageDetailsModule } from './storage-details/storage-details.module';
+import { StorageService } from './storage/storage.service';
+import { StorageController } from './storage/storage.controller';
+import { StorageModule } from './storage/storage.module';
+import { KindModule } from './kind/kind.module';
+import { KindProductService } from './kind-product/kind-product.service';
+import { KindProductController } from './kind-product/kind-product.controller';
+import { KindProductModule } from './kind-product/kind-product.module';
 
 @Module({
   imports: [
@@ -19,9 +28,9 @@ import { UserModule } from './user/user.module';
       entities: [User, Product],
       synchronize: true,
     }),
-    ProductModule,UserModule
+    ProductModule,UserModule, TypeModule, StorageDetailsModule, StorageModule, KindModule, KindProductModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, StorageController, KindProductController],
+  providers: [AppService, StorageService, KindProductService],
 })
 export class AppModule {}
