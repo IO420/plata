@@ -12,13 +12,9 @@ import { StorageService } from './storage/storage.service';
 import { StorageController } from './storage/storage.controller';
 import { StorageModule } from './storage/storage.module';
 import { KindModule } from './kind/kind.module';
-import { KindProductService } from './kind-product/kind-product.service';
-import { KindProductController } from './kind-product/kind-product.controller';
-import { KindProductModule } from './kind-product/kind-product.module';
 import { Type } from './type/entity/type.entity';
 import { StorageDetails } from './storage-details/entity/storage-details.entity';
 import { Kind } from './kind/entity/kind.entity';
-import { KindProduct } from './kind-product/entity/kind-product.entity';
 import { Storage } from './storage/entity/storage.entity';
 
 @Module({
@@ -36,8 +32,7 @@ import { Storage } from './storage/entity/storage.entity';
         Product,
         Storage,
         StorageDetails,
-        Kind,
-        KindProduct,
+        Kind
       ],
       synchronize: true,
     }),
@@ -47,9 +42,8 @@ import { Storage } from './storage/entity/storage.entity';
     StorageDetailsModule,
     StorageModule,
     KindModule,
-    KindProductModule,
   ],
-  controllers: [AppController, StorageController, KindProductController],
-  providers: [AppService, StorageService, KindProductService],
+  controllers: [AppController, StorageController],
+  providers: [AppService, StorageService],
 })
 export class AppModule {}

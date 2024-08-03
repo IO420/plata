@@ -1,38 +1,24 @@
-import { IsNumber, IsString, Length, ValidateNested } from "class-validator"
-import { Type } from "class-transformer";
-import { StorageDetails } from "src/storage-details/entity/storage-details.entity";
+import { IsNumber, IsString, Length, ValidateNested, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
+import { KindDto } from 'src/kind/dto/kind.dto';
 
-export class ProductDto{
+export class ProductDto {
+  @IsOptional()
+  @IsNumber()
+  id_product?: number; // No siempre se incluye en el registro, pero puede estar en la actualización
 
-    @IsNumber()
-    id_product:number
+  @IsString()
+  @Length(2, 20)
+  name: string;
 
-    @IsString()
-    @Length(2,20)
-    name:string
+  @IsString()
+  @Length(0, 100)
+  description: string;
 
-    @IsString()
-    @Length(0,100)
-    description:string
+  @IsNumber()
+  price: number;
 
-    @IsNumber()
-    price:number
-
-    @ValidateNested({ each: true })
-    @Type(() => StorageDetails)
-    storageDetails: StorageDetails[];
-
-    @ValidateNested({ each: true })
-    @Type(() => KindProduct)
-    kindProduct: KindProduct[];
-
-}
-
-export class KindProduct{
-
-    @IsNumber()
-    id_kind:number
-
-    @IsNumber()
-    id_product:number
+  @ValidateNested({ each: true })
+  @Type(() => KindDto)
+  kinds: KindDto[];
 }

@@ -1,15 +1,14 @@
-import { KindProduct } from "src/kind-product/entity/kind-product.entity";
-import { Product } from "src/product/entity/product.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Product } from 'src/product/entity/product.entity';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'kind' })
 export class Kind {
-    @PrimaryGeneratedColumn()
-    id_kind: number;
+  @PrimaryGeneratedColumn()
+  id_kind: number;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @OneToMany(() => KindProduct, kindProduct => kindProduct.kind)
-    kindProduct: KindProduct;
+  @ManyToMany(() => Product, product => product.kinds)
+  products: Product[];
 }

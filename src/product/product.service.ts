@@ -1,41 +1,50 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './entity/product.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { ProductDto } from './dto/product.dto';
+import { Kind } from 'src/kind/entity/kind.entity';
 
 @Injectable()
 export class ProductService {
+  private readonly logger = new Logger(ProductService.name);
+
   constructor(
     @InjectRepository(Product)
-    private productRepository: Repository<Product>,
+    private readonly productRepository: Repository<Product>,
+    @InjectRepository(Kind)
+    private readonly kindRepository: Repository<Kind>,
   ) {}
 
-  async find(id_product) {
+  async find(id_product: number): Promise<Product> {
     const product = await this.productRepository.findOne({
       where: { id_product },
-      relations: ["kindProduct"]
+      relations: ['kinds'],
     });
 
-    if(!product){
-      Logger.debug(`product not fount`);
-      throw new HttpException('product not fount', 404);
+    if (!product) {
+      this.logger.debug('Product not found');
+      throw new HttpException('Product not found', 404);
     }
 
     return product;
   }
 
-  findAll() {
-    const data = this.productRepository.find({ order: { name: 'ASC' } });
+  async findAll(): Promise<Product[]> {
+    const products = await this.productRepository.find({
+      order: { name: 'ASC' },
+      relations: ['kinds'],
+    });
 
-    if (!data) {
-      Logger.debug(`product not fount`);
-      throw new HttpException('product not fount', 404);
+    if (!products.length) {
+      this.logger.debug('No products found');
+      throw new HttpException('No products found', 404);
     }
 
-    return data;
+    return products;
   }
 
-  async findByFilter(filter: any) {
+  async findByFilter(filter: any): Promise<Product[]> {
     const query = this.productRepository.createQueryBuilder('product');
 
     if (filter.name) {
@@ -46,52 +55,114 @@ export class ProductService {
       query.andWhere('product.price <= :price', { price: filter.price });
     }
 
-    query.addOrderBy('profesor.name', 'ASC');
+    query.addOrderBy('product.name', 'ASC');
 
     const products = await query.getMany();
 
-    if (!products) {
-      Logger.debug(`product not fount`);
-      throw new HttpException('product not fount', 404);
+    if (!products.length) {
+      this.logger.debug('No products found');
+      throw new HttpException('No products found', 404);
     }
 
-    Logger.debug(`find product successfully`);
+    this.logger.debug('Products found successfully');
     return products;
   }
 
-  register(data) {
-    Logger.debug(data);
+  async register(data: ProductDto) {
+    Logger.debug('Registering product:', data);
 
-    this.productRepository.save(this.productRepository.create(data));
-    Logger.debug(`product register successfully`);
-    return { message: 'product register successfully' };
+    const product = this.productRepository.create({
+      name: data.name,
+      description: data.description,
+      price: data.price,
+    });
+
+    try {
+      const savedProduct = await this.productRepository.save(product);
+
+      const { kinds } = data;
+      if (kinds && kinds.length > 0) {
+        const kindEntities = await Promise.all(
+          kinds.map(async (kindId) => {
+            const kind = await this.kindRepository.findOne({
+              where: { id_kind: +kindId },
+            });
+
+            if (!kind) {
+              throw new HttpException(`Kind with id ${kindId} not found`, 404);
+            }
+
+            return kind;
+          }),
+        );
+
+        savedProduct.kinds = kindEntities;
+        await this.productRepository.save(savedProduct);
+      }
+
+      Logger.debug('Product registered successfully');
+      return { message: 'Product registered successfully' };
+    } catch (error) {
+      Logger.error('Error registering product:', error);
+      throw error;
+    }
   }
 
-  async modify(id_product, data) {
-    const product = await this.find(id_product);
-
+  async modify(id_product: number, data: ProductDto): Promise<{ message: string }> {
+    const product = await this.productRepository.findOne({
+      where: { id_product },
+      relations: ['kinds'],
+    });
+  
     if (!product) {
-      Logger.debug(`product not fount`);
-      throw new HttpException('product not fount', 404);
+      this.logger.debug('Product not found');
+      throw new HttpException('Product not found', 404);
     }
+  
+    Object.assign(product, {
+      name: data.name,
+      description: data.description,
+      price: data.price,
+    });
+  
+    if (data.kinds && Array.isArray(data.kinds)) {
+      const kindEntities = await Promise.all(
+        data.kinds.map(async (kindId) => {
+          const kind = await this.kindRepository.findOne({
+            where: { id_kind: +kindId },
+          });
+  
+          if (!kind) {
+            throw new HttpException(`Kind with id ${kindId} not found`, 404);
+          }
+  
+          return kind;
+        }),
+      );
 
-    Object.assign(product, data);
-
-    this.productRepository.save(product);
-    Logger.debug(`product modify successfully`);
-    return { message: 'product modify successfully' };
+      product.kinds = kindEntities;
+    }
+  
+    await this.productRepository.save(product);
+  
+    this.logger.debug('Product modified successfully');
+    return { message: 'Product modified successfully' };
   }
+  
 
-  async remove(id_product) {
-    const product = await this.find(id_product);
+  async remove(id_product: number): Promise<{ message: string }> {
+    const product = await this.productRepository.findOne({
+      where: { id_product },
+      relations: ['kinds', 'storageDetails'],
+    });
 
     if (!product) {
-      Logger.debug(`product not fount`);
-      throw new HttpException('product not fount', 404);
+      this.logger.debug('Product not found');
+      throw new HttpException('Product not found', 404);
     }
 
-    this.productRepository.remove(product);
-    Logger.debug(`product delete successfully`);
-    return { message: 'product delete successfully' };
+    await this.productRepository.remove(product);
+    this.logger.debug('Product deleted successfully');
+    return { message: 'Product deleted successfully' };
   }
 }

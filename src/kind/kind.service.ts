@@ -26,6 +26,18 @@ export class KindService {
     return {message:'kind register'}
   }
 
+  async modify(id_kind,data){
+    const kind = await this.kindRepository.findOne({where:{id_kind}})
+    if(!kind){
+      throw new HttpException('kind not fount',404)
+    }
+
+    Object.assign(kind, data);
+
+    this.kindRepository.save(kind)
+    return {message:'kind modify successfully'}
+  }
+
   async remove(id_kind:number){
     const kind = await this.kindRepository.findOne({where:{id_kind}})
 

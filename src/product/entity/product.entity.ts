@@ -1,6 +1,6 @@
-import { KindProduct } from 'src/kind-product/entity/kind-product.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany, JoinTable } from 'typeorm';
+import { Kind } from 'src/kind/entity/kind.entity';
 import { StorageDetails } from 'src/storage-details/entity/storage-details.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'product' })
 export class Product {
@@ -16,9 +16,10 @@ export class Product {
   @Column()
   price: number;
 
-  @OneToMany(() => StorageDetails, (storageDetails) => storageDetails.product)
-  storageDetails: StorageDetails[];
+  @ManyToMany(() => Kind, kind => kind.products)
+  @JoinTable()
+  kinds: Kind[];
 
-  @OneToMany(() => KindProduct, (KindProduct) => KindProduct.product)
-  kindProduct: KindProduct;
+  @OneToMany(() => StorageDetails, storageDetails => storageDetails.product)
+  storageDetails: StorageDetails[];
 }
