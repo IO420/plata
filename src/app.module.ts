@@ -16,9 +16,11 @@ import { Type } from './type/entity/type.entity';
 import { StorageDetails } from './storage-details/entity/storage-details.entity';
 import { Kind } from './kind/entity/kind.entity';
 import { Storage } from './storage/entity/storage.entity';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -43,7 +45,7 @@ import { Storage } from './storage/entity/storage.entity';
     StorageModule,
     KindModule,
   ],
-  controllers: [AppController, StorageController],
-  providers: [AppService, StorageService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
