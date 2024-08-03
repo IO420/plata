@@ -11,5 +11,5 @@ export class Kind {
     name: string;
 
     @OneToMany(() => KindProduct, kindProduct => kindProduct.kind)
-    kindProducts: KindProduct[];
+    kindProduct: KindProduct;
 }

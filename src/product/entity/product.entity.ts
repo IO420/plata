@@ -20,5 +20,5 @@ export class Product {
   storageDetails: StorageDetails[];
 
   @OneToMany(() => KindProduct, (KindProduct) => KindProduct.product)
-  kindProduct: KindProduct[];
+  kindProduct: KindProduct;
 }

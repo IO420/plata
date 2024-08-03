@@ -59,7 +59,7 @@ export class ProductService {
     return products;
   }
 
-  async register(data) {
+  register(data) {
     Logger.debug(data);
 
     this.productRepository.save(this.productRepository.create(data));

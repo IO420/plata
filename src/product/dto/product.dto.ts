@@ -1,5 +1,6 @@
 import { IsNumber, IsString, Length, ValidateNested } from "class-validator"
 import { Type } from "class-transformer";
+import { StorageDetails } from "src/storage-details/entity/storage-details.entity";
 
 export class ProductDto{
 
@@ -16,6 +17,10 @@ export class ProductDto{
 
     @IsNumber()
     price:number
+
+    @ValidateNested({ each: true })
+    @Type(() => StorageDetails)
+    storageDetails: StorageDetails[];
 
     @ValidateNested({ each: true })
     @Type(() => KindProduct)
