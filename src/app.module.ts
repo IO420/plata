@@ -8,8 +8,6 @@ import { Product } from './product/entity/product.entity';
 import { UserModule } from './user/user.module';
 import { TypeModule } from './type/type.module';
 import { StorageDetailsModule } from './storage-details/storage-details.module';
-import { StorageService } from './storage/storage.service';
-import { StorageController } from './storage/storage.controller';
 import { StorageModule } from './storage/storage.module';
 import { KindModule } from './kind/kind.module';
 import { Type } from './type/entity/type.entity';

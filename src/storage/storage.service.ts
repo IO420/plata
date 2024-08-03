@@ -20,19 +20,20 @@ export class StorageService {
     });
 
     await this.storageRepository.save(newStorage);
-    this.logger.debug('New storage created:', newStorage);
+
+    this.logger.debug('New storage created:');
   }
 
   async createManualStorage() {
     const newStorage = this.storageRepository.create({
-      date: new Date().toISOString().split('T')[0], // Store date in YYYY-MM-DD format
+      date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
     });
-
+  
     await this.storageRepository.save(newStorage);
-    this.logger.debug('Manual storage created:', newStorage);
+    this.logger.debug('Manual storage created:');
   }
 
-  findAll() {
-    return this.storageRepository.find({ order: { date: 'DESC' } });
+  findAll(){
+    return this.storageRepository.find({order:{date:'DESC'}})
   }
 }
