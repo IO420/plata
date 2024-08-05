@@ -5,7 +5,7 @@ import { KindDto } from 'src/kind/dto/kind.dto';
 export class ProductDto {
   @IsOptional()
   @IsNumber()
-  id_product?: number; // No siempre se incluye en el registro, pero puede estar en la actualización
+  id_product: number;
 
   @IsString()
   @Length(2, 20)

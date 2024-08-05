@@ -69,44 +69,45 @@ export class ProductService {
   }
 
   async register(data: ProductDto) {
-    Logger.debug('Registering product:', data);
-
+    Logger.debug('Registering product:', JSON.stringify(data));
+  
     const product = this.productRepository.create({
       name: data.name,
       description: data.description,
       price: data.price,
     });
-
+  
     try {
       const savedProduct = await this.productRepository.save(product);
-
+  
       const { kinds } = data;
       if (kinds && kinds.length > 0) {
         const kindEntities = await Promise.all(
-          kinds.map(async (kindId) => {
-            const kind = await this.kindRepository.findOne({
-              where: { id_kind: +kindId },
+          kinds.map(async (kind) => {
+            const kindEntity = await this.kindRepository.findOne({
+              where: { id_kind: kind.id_kind },
             });
-
-            if (!kind) {
-              throw new HttpException(`Kind with id ${kindId} not found`, 404);
+  
+            if (!kindEntity) {
+              throw new HttpException(`Kind with id ${kind.id_kind} not found`, 404);
             }
-
-            return kind;
-          }),
+  
+            return kindEntity;
+          })
         );
-
+  
         savedProduct.kinds = kindEntities;
         await this.productRepository.save(savedProduct);
       }
-
+  
       Logger.debug('Product registered successfully');
       return { message: 'Product registered successfully' };
     } catch (error) {
-      Logger.error('Error registering product:', error);
+      Logger.error('Error registering product:', error.message);
       throw error;
     }
   }
+  
 
   async modify(id_product: number, data: ProductDto): Promise<{ message: string }> {
     const product = await this.productRepository.findOne({
