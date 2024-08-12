@@ -44,6 +44,19 @@ export class ProductService {
     return products;
   }
 
+  async findFilter(filters: any):Promise<Product[]>{
+    const query = this.productRepository.createQueryBuilder("product");
+
+    if(filters){
+      Logger.debug('fiter');
+      query.andWhere("product.kinds LIKE :kinds", { kinds: `%${filters.kinds}%` });
+    }
+
+    const products = await query.getMany();
+
+    return products;
+  }
+
   async findByFilter(filter: any): Promise<Product[]> {
     const query = this.productRepository.createQueryBuilder('product');
 

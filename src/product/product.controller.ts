@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Logger, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductDto } from './dto/product.dto';
+import { filter } from 'rxjs';
 
 @Controller('product')
 export class ProductController {
@@ -10,6 +11,12 @@ export class ProductController {
   findAll() {
     Logger.debug('find all products');
     return this.productService.findAll();
+  }
+
+  @Get('filter')
+  findFilter(@Query() filters:any) {
+    Logger.debug('find filter products');
+    return this.productService.findFilter(filters);
   }
 
   @Get(':id_product')
