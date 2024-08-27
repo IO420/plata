@@ -9,6 +9,9 @@ export class Kind {
   @Column()
   name: string;
 
+  @Column()
+  url: string;
+
   @ManyToMany(() => Product, product => product.kinds)
   products: Product[];
 }

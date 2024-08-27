@@ -88,6 +88,7 @@ export class ProductService {
       name: data.name,
       description: data.description,
       price: data.price,
+      url: data.url,
     });
   
     try {
@@ -137,6 +138,7 @@ export class ProductService {
       name: data.name,
       description: data.description,
       price: data.price,
+      url:data.url,
     });
   
     if (data.kinds && Array.isArray(data.kinds)) {

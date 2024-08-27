@@ -18,6 +18,10 @@ export class ProductDto {
   @IsNumber()
   price: number;
 
+  @IsString()
+  @Length(0, 100)
+  url: string;
+
   @ValidateNested({ each: true })
   @Type(() => KindDto)
   kinds: KindDto[];

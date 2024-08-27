@@ -16,6 +16,9 @@ export class Product {
   @Column()
   price: number;
 
+  @Column()
+  url: string;
+
   @ManyToMany(() => Kind, kind => kind.products)
   @JoinTable()
   kinds: Kind[];

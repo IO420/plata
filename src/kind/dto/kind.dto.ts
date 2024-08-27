@@ -10,4 +10,8 @@ export class KindDto{
     @IsOptional()
     name:string
 
+    @IsString()
+    @IsOptional()
+    url:string
+
 }
