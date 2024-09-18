@@ -25,10 +25,10 @@ import { Module } from '@nestjs/common';
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
-      type: 'mariadb',
-      host: '127.0.0.1',
-      port: 3306,
-      username: 'root',
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
       password: '1234',
       database: 'plata',
       entities: [

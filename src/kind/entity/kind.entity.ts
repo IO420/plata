@@ -9,7 +9,7 @@ export class Kind {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   url: string;
 
   @ManyToMany(() => Product, product => product.kinds)

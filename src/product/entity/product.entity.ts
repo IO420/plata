@@ -16,7 +16,7 @@ export class Product {
   @Column()
   price: number;
 
-  @Column()
+  @Column({ nullable: true })
   url: string;
 
   @ManyToMany(() => Kind, kind => kind.products)
