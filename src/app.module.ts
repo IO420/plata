@@ -20,6 +20,7 @@ import { ImagesService } from './images/images.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
+import { socketModule } from './webSocket/webSocket.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { Module } from '@nestjs/common';
     StorageModule,
     KindModule,
     ImagesModule,
+    socketModule,
   ],
   controllers: [AppController, ImagesController],
   providers: [AppService, ImagesService],
